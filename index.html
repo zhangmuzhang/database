@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="box">
+			您的浏览器不支持canvas,请升级浏览器
+		</canvas>
+		<script type="text/javascript">
+			(function(){
+				var canvas = document.getElementById("box");
+				var ctx = canvas.getContext("2d");
+				canvas.style.border = "1px solid #ddd";
+				canvas.width=800;
+				canvas.height=500;
+				var ball=[];
+				function Run(x,y,color){
+					this.x=x;
+					this.y=y;
+					this.r=rand(30,0);
+					this.color=color;
+					this.init();
+				}
+				Run.prototype={
+					init:function(){
+						ctx.beginPath();
+						ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+						ctx.fillStyle=this.color;
+						ctx.fill();
+						ctx.closePath()
+						this.bindEvent();
+					},
+					bindEvent:function(){
+						canvas.onmousemove = function(e){
+							ball.push(new Run(e.clientX+rand(30,5),e.clientY+rand(30,5),"rgb("+rand(255,0)+","+rand(255,0)+","+rand(255,0)+")"))
+						}
+					},
+					update:function(){
+						this.x+=rand(8,-2);
+						this.y+=rand(8,-2);
+						this.r--;
+						if(this.r<0){
+							this.r=0;
+							return;
+						}
+					}
+				}
+				function rand(max,min){
+					return Math.floor(Math.random()*max+min);
+				}
+				setInterval(function(){
+					ctx.clearRect(0,0,canvas.width,canvas.height);
+					for (var i = 0; i < ball.length; i++) {
+						ball[i].init();
+						ball[i].update();
+					}
+				},50)
+				new Run(100,100,"pink")
+			})()
+		</script>
+	</body>
+</html>
